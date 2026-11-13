@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bear & Friends - ระบบจัดการหลังบ้าน (Full Admin)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #8C6CD8;
+      --primary-dark: #7A56D3;
+      --bg: #F9F7FD;
+      --white: #ffffff;
+      --danger: #ff424f;
+      --warning: #f0ad4e;
+      --success: #28a745;
+      --info: #17a2b8;
+    }
+    body {
+      font-family: 'Mitr', sans-serif;
+      background-color: var(--bg);
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .admin-container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    
+    /* Header & Navigation Tabs */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 15px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(140, 108, 216, 0.1);
+      margin-bottom: 20px;
+    }
+    .brand-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .admin-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+    .tab-btn {
+      padding: 12px 20px;
+      background: white;
+      border: 1.5px solid #efe8fc;
+      border-radius: 10px;
+      font-family: 'Mitr', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #555;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { background: #F4F0FB; color: var(--primary); }
+    .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Layout Cards */
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .grid-layout { grid-template-columns: 1fr; }
+    }
+    
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      border: 1px solid #efe8fc;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-top: 0;
+      margin-bottom: 18px;
+      color: #4a3770;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Form Styles */
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-weight: 500; margin-bottom: 6px; font-size: 0.9rem; color: #555; }
+    .form-control {
+      width: 100%; padding: 10px 12px; border: 1.5px solid #e0d6f5; border-radius: 8px;
+      box-sizing: border-box; font-family: 'Mitr', sans-serif; font-size: 0.9rem; outline: none;
+    }
+    .form-control:focus { border-color: var(--primary); }
+    
+    .size-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+      background: #fcfbfe; padding: 12px; border-radius: 8px; border: 1px dashed #d8cbfa;
+    }
+
+    .btn {
+      padding: 10px 16px; border: none; border-radius: 8px; font-family: 'Mitr', sans-serif;
+      font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; display: inline-flex;
+      align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-primary { background: var(--primary); color: white; width: 100%; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-cancel { background: #eee; color: #555; width: 100%; margin-top: 8px; display: none; }
+    .btn-sm { padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; }
+    .btn-edit { background: var(--warning); color: white; }
+    .btn-delete { background: var(--danger); color: white; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-info { background: var(--info); color: white; }
+
+    .image-preview {
+      width: 100%; height: 150px; border-radius: 8px; background: #f4f0fb;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+      margin-top: 8px; border: 1px dashed #ccc; position: relative;
+    }
+    .image-preview img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .loading-img-text { position: absolute; background: rgba(255,255,255,0.9); width: 100%; height: 100%; display: none; align-items: center; justify-content: center; font-size: 0.85rem; color: var(--primary); }
+
+    /* Tables */
+    .table-responsive { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+    th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+    th { background: #f8f5fe; color: #4a3770; font-weight: 600; white-space: nowrap; }
+    tr:hover { background: #faf8fe; }
+    .product-img-th { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; background: #eee; }
+
+    /* Orders Section */
+    .order-card {
+      border: 1px solid #efe8fc; border-radius: 10px; padding: 16px; margin-bottom: 15px;
+      background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+    .order-header {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 10px;
+    }
+    .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; }
+    .badge-pending { background: #fff3cd; color: #856404; }
+    .badge-shipping { background: #cce5ff; color: #004085; }
+    .badge-completed { background: #d4edda; color: #155724; }
+    .badge-cancelled { background: #f8d7da; color: #721c24; }
+
+    /* Chat Section */
+    .chat-layout { display: grid; grid-template-columns: 280px 1fr; gap: 15px; height: 500px; }
+    .user-list { border-right: 1px solid #eee; overflow-y: auto; padding-right: 10px; }
+    .user-item { padding: 10px; border-radius: 8px; cursor: pointer; margin-bottom: 5px; background: #fdfdfd; border: 1px solid #f0f0f0; }
+    .user-item:hover, .user-item.active { background: #F3EEFC; border-color: var(--primary); }
+    .chat-box { display: flex; flex-direction: column; height: 100%; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 10px; background: #faf8fe; border-radius: 8px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .msg-bubble { max-width: 70%; padding: 8px 14px; border-radius: 12px; font-size: 0.9rem; }
+    .msg-admin { background: var(--primary); color: white; align-self: flex-end; }
+    .msg-user { background: #e9ecef; color: #333; align-self: flex-start; }
+
+    #toast {
+      visibility: hidden; min-width: 200px; background-color: rgba(0, 0, 0, 0.85);
+      color: #fff; text-align: center; border-radius: 50px; padding: 12px 20px;
+      position: fixed; z-index: 2000; left: 50%; top: 20px; transform: translateX(-50%);
+      font-size: 0.9rem; opacity: 0; transition: 0.3s;
+    }
+    #toast.show { visibility: visible; opacity: 1; }
+    #toast.error { background-color: rgba(220, 53, 69, 0.95); }
+  </style>
+</head>
+<body>
+
+  <div class="admin-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="brand-title">
+        <i class="fas fa-paw"></i> Bear & Friends Admin Management
+      </div>
+      <a href="shop.html" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 500; font-size: 0.9rem;">
+        <i class="fas fa-external-link-alt"></i> ไปที่หน้าร้านค้า
+      </a>
+    </div>
+
+    <!-- Admin Navigation Tabs -->
+    <div class="admin-tabs">
+      <button class="tab-btn active" onclick="switchTab('products', this)"><i class="fas fa-boxes"></i> จัดการสินค้า</button>
+      <button class="tab-btn" onclick="switchTab('orders', this)"><i class="fas fa-shopping-cart"></i> คำสั่งซื้อ & ขนส่ง</button>
+      <button class="tab-btn" onclick="switchTab('chats', this)"><i class="fas fa-comments"></i> แชทลูกค้า</button>
+      <button class="tab-btn" onclick="switchTab('coupons', this)"><i class="fas fa-ticket-alt"></i> โค้ดส่วนลด</button>
+    </div>
+
+    <!-- TAB 1: PRODUCT MANAGEMENT -->
+    <div id="tab-products" class="tab-content active">
+      <div class="grid-layout">
+        <div class="card">
+          <h3 class="card-title" id="formTitle"><i class="fas fa-plus-circle"></i> เพิ่มสินค้าใหม่</h3>
+          <form id="productForm" onsubmit="handleProductSubmit(event)">
+            <input type="hidden" id="productId">
+
+            <div class="form-group">
+              <label>ชื่อตุ๊กตา *</label>
+              <input type="text" id="pName" class="form-control" placeholder="เช่น ตุ๊กตาหมีขนนุ่ม" required>
+            </div>
+
+            <div class="form-group">
+              <label>ราคา (บาท) *</label>
+              <input type="number" id="pPrice" class="form-control" placeholder="เช่น 290" min="0" required>
+            </div>
+
+            <div class="form-group">
+              <label>หมวดหมู่ *</label>
+              <select id="pCategory" class="form-control" required>
+                <option value="ตุ๊กตาหมี">🐻 ตุ๊กตาหมี</option>
+                <option value="ตุ๊กตาแมว">🐱 ตุ๊กตาแมว</option>
+                <option value="ตุ๊กตากระต่าย">🐰 ตุ๊กตากระต่าย</option>
+                <option value="ตุ๊กตาเพนกวิน">🐧 ตุ๊กตาเพนกวิน</option>
+                <option value="ตุ๊กตาสัตว์อื่นๆ">🐥 ตุ๊กตาสัตว์อื่นๆ</option>
+                <option value="ของขวัญ / เซ็ตพิเศษ">🎁 ของขวัญ / เซ็ตพิเศษ</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>จำนวนสต็อกแยกตามขนาด (ชิ้น)</label>
+              <div class="size-grid">
+                <div><label style="font-size:0.8rem;">30 ซม.</label><input type="number" id="size30" class="form-control" value="10" min="0"></div>
+                <div><label style="font-size:0.8rem;">50 ซม.</label><input type="number" id="size50" class="form-control" value="10" min="0"></div>
+                <div><label style="font-size:0.8rem;">80 ซม.</label><input type="number" id="size80" class="form-control" value="5" min="0"></div>
+                <div><label style="font-size:0.8rem;">100 ซม.</label><input type="number" id="size100" class="form-control" value="2" min="0"></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>รูปภาพสินค้า (อัปโหลดไฟล์ หรือวาง URL)</label>
+              <input type="file" id="pImageFile" accept="image/*" class="form-control" onchange="previewImageFile(event)">
+              <input type="url" id="pImageURL" class="form-control" placeholder="https://example.com/image.jpg" style="margin-top: 6px;" oninput="previewImageURL(this.value)">
+              <div class="image-preview" id="imagePreviewBox">
+                <div class="loading-img-text" id="imgLoadingText"><i class="fas fa-spinner fa-spin"></i> กำลังย่อขนาดรูปภาพ...</div>
+                <span id="previewPlaceholder" style="color: #aaa; font-size: 0.85rem;"><i class="fas fa-image"></i> ตัวอย่างรูปภาพ</span>
+                <img id="previewImg" src="">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="btnSubmit">บันทึกสินค้า</button>
+            <button type="button" class="btn btn-cancel" id="btnCancel" onclick="resetProductForm()">ยกเลิกการแก้ไข</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title"><i class="fas fa-boxes"></i> รายการสินค้าทั้งหมดในระบบ</h3>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>รูป</th>
+                  <th>ชื่อสินค้า</th>
+                  <th>หมวดหมู่</th>
+                  <th>ราคา</th>
+                  <th>สต็อกรวม</th>
+                  <th>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="productTableBody">
+                <tr><td colspan="6" style="text-align:center; color:#888;">กำลังโหลดข้อมูล...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: ORDER MANAGEMENT -->
+    <div id="tab-orders" class="tab-content">
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-shipping-fast"></i> รายการสั่งซื้อของลูกค้า</h3>
+        <div id="ordersListContainer">กำลังโหลดรายการสั่งซื้อ...</div>
+      </div>
+    </div>
+
+    <!-- TAB 3: CHAT MANAGEMENT -->
+    <div id="tab-chats" class="tab-content">
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-comments"></i> แชทพูดคุยกับลูกค้า</h3>
+        <div class="chat-layout">
+          <div class="user-list" id="chatUserList">กำลังโหลดรายชื่อ...</div>
+          <div class="chat-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <strong id="activeChatUser">เลือกผู้ใช้เพื่อเริ่มสนทนา</strong>
+              <button id="blockBtn" class="btn btn-sm btn-delete" style="display:none;" onclick="toggleBlockUser()">บล็อกผู้ใช้</button>
+            </div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="adminMsgInput" class="form-control" placeholder="พิมพ์ข้อความตอบกลับ..." onkeypress="if(event.key==='Enter') sendAdminMessage()">
+              <button class="btn btn-primary" style="width:auto;" onclick="sendAdminMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: COUPON MANAGEMENT -->
+    <div id="tab-coupons" class="tab-content">
+      <div class="grid-layout">
+        <div class="card">
+          <h3 class="card-title"><i class="fas fa-plus-circle"></i> สร้างโค้ดส่วนลด</h3>
+          <form onsubmit="handleCouponSubmit(event)">
+            <div class="form-group">
+              <label>รหัสคูปอง (ตัวพิมพ์ใหญ่)</label>
+              <input type="text" id="cCode" class="form-control" placeholder="เช่น SALE100" required uppercase style="text-transform:uppercase;">
+            </div>
+            <div class="form-group">
+              <label>ประเภทส่วนลด</label>
+              <select id="cType" class="form-control">
+                <option value="fixed">จำนวนเงิน (บาท)</option>
+                <option value="percent">เปอร์เซ็นต์ (%)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>มูลค่าส่วนลด</label>
+              <input type="number" id="cValue" class="form-control" placeholder="เช่น 50" required min="1">
+            </div>
+            <div class="form-group">
+              <label>จำนวนสิทธิ์ทั้งหมด</label>
+              <input type="number" id="cQty" class="form-control" value="100" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-primary">สร้างคูปอง</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title"><i class="fas fa-ticket-alt"></i> รายการโค้ดส่วนลดที่มีอยู่</h3>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>รหัสคูปอง</th>
+                  <th>ส่วนลด</th>
+                  <th>ใช้ไปแล้ว / ทั้งหมด</th>
+                  <th>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="couponTableBody">
+                <tr><td colspan="4" style="text-align:center; color:#888;">กำลังโหลดข้อมูล...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="toast"><span>การแจ้งเตือน</span></div>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDAQ5ciTKsx2Ir9aG2DKkn9QbOgNoRqE-o",
+      authDomain: "bear-eb284.firebaseapp.com",
+      projectId: "bear-eb284",
+      storageBucket: "bear-eb284.firebasestorage.app",
+      messagingSenderId: "1010335585380",
+      appId: "1:1010335585380:web:a22a798c7613f4109b3b71",
+      measurementId: "G-8JXX2EYXS9"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const DEFAULT_SVG_PRODUCT = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='100%25' height='100%25' fill='%23f4f0fb'/%3E%3Ctext x='50%25' y='50%25' font-family='Mitr, sans-serif' font-size='60' text-anchor='middle' dominant-baseline='middle'%3E🧸%3C/text%3E%3C/svg%3E";
+
+    let productsData = [], uploadedBase64 = null;
+    let selectedChatUserId = null, isSelectedUserBlocked = false;
+
+    // Switch Admin Tabs
+    function switchTab(tabName, btnEl) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btnEl.classList.add('active');
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+    }
+
+    // --- TAB 1: PRODUCT MANAGEMENT ---
+    window.addEventListener('DOMContentLoaded', () => {
+      listenProducts();
+      listenOrders();
+      listenChats();
+      listenCoupons();
+    });
+
+    function listenProducts() {
+      db.collection('products').onSnapshot(snapshot => {
+        productsData = [];
+        snapshot.forEach(doc => productsData.push({ id: doc.id, ...doc.data() }));
+        renderProductsTable(productsData);
+      });
+    }
+
+    function renderProductsTable(data) {
+      const tbody = document.getElementById('productTableBody');
+      tbody.innerHTML = data.length ? '' : '<tr><td colspan="6" style="text-align:center; color:#999;">ไม่มีสินค้า</td></tr>';
+      data.forEach(item => {
+        tbody.innerHTML += `
+          <tr>
+            <td><img src="${item.image || DEFAULT_SVG_PRODUCT}" class="product-img-th" onerror="this.src='${DEFAULT_SVG_PRODUCT}'"></td>
+            <td><strong>${item.name}</strong></td>
+            <td><span style="background:#F3EEFC; color:var(--primary); padding:3px 8px; border-radius:12px; font-size:0.8rem;">${item.category}</span></td>
+            <td style="color:var(--primary); font-weight:600;">฿${item.price}</td>
+            <td>${item.totalStock || 0} ชิ้น</td>
+            <td>
+              <button class="btn btn-sm btn-edit" onclick="editProduct('${item.id}')"><i class="fas fa-edit"></i> แก้ไข</button>
+              <button class="btn btn-sm btn-delete" onclick="deleteProduct('${item.id}', '${item.name}')"><i class="fas fa-trash"></i> ลบ</button>
+            </td>
+          </tr>`;
+      });
+    }
+
+    async function handleProductSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmit'); btn.disabled = true;
+      const id = document.getElementById('productId').value;
+      const name = document.getElementById('pName').value.trim();
+      const price = parseFloat(document.getElementById('pPrice').value);
+      const category = document.getElementById('pCategory').value;
+
+      const size30 = parseInt(document.getElementById('size30').value) || 0;
+      const size50 = parseInt(document.getElementById('size50').value) || 0;
+      const size80 = parseInt(document.getElementById('size80').value) || 0;
+      const size100 = parseInt(document.getElementById('size100').value) || 0;
+      const sizeStock = { "30 ซม.": size30, "50 ซม.": size50, "80 ซม.": size80, "100 ซม.": size100 };
+      const totalStock = size30 + size50 + size80 + size100;
+
+      let image = document.getElementById('pImageURL').value.trim();
+      if (uploadedBase64) image = uploadedBase64;
+      if (!image && !id) image = DEFAULT_SVG_PRODUCT;
+
+      const payload = { name, price, category, sizeStock, totalStock };
+      if (image) payload.image = image;
+
+      try {
+        if (id) {
+          await db.collection('products').doc(id).update(payload);
+          showToast('อัปเดตสินค้าเรียบร้อย');
+        } else {
+          payload.sold = 0;
+          await db.collection('products').add(payload);
+          showToast('เพิ่มสินค้าใหม่เรียบร้อย');
+        }
+        resetProductForm();
+      } catch (err) { showToast('เกิดข้อผิดพลาด: ' + err.message, true); }
+      finally { btn.disabled = false; }
+    }
+
+    function editProduct(id) {
+      const p = productsData.find(x => x.id === id); if (!p) return;
+      document.getElementById('productId').value = p.id;
+      document.getElementById('pName').value = p.name;
+      document.getElementById('pPrice').value = p.price;
+      document.getElementById('pCategory').value = p.category;
+      
+      const st = p.sizeStock || {};
+      document.getElementById('size30').value = st["30 ซม."] || 0;
+      document.getElementById('size50').value = st["50 ซม."] || 0;
+      document.getElementById('size80').value = st["80 ซม."] || 0;
+      document.getElementById('size100').value = st["100 ซม."] || 0;
+      document.getElementById('pImageURL').value = p.image && !p.image.startsWith('data:image') ? p.image : '';
+
+      const previewImg = document.getElementById('previewImg');
+      if (p.image) { previewImg.src = p.image; previewImg.style.display = 'block'; document.getElementById('previewPlaceholder').style.display = 'none'; }
+      
+      document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit"></i> แก้ไขสินค้า';
+      document.getElementById('btnSubmit').innerText = 'อัปเดตสินค้า';
+      document.getElementById('btnCancel').style.display = 'block';
+    }
+
+    async function deleteProduct(id, name) {
+      if (confirm(`คุณต้องการลบ "${name}" ใช่หรือไม่?`)) {
+        await db.collection('products').doc(id).delete();
+        showToast('ลบสินค้าเรียบร้อย');
+      }
+    }
+
+    // ฟังก์ชั่นย่อขนาดและบีบอัดรูปภาพด้วย HTML5 Canvas (ไม่ให้เกิน 1MB)
+    function compressAndResizeImage(file, maxWidth = 600, maxHeight = 600, quality = 0.7) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width, height = img.height;
+            if (width > height) {
+              if (width > maxWidth) { height = Math.round(height * (maxWidth / width)); width = maxWidth; }
+            } else {
+              if (height > maxHeight) { width = Math.round(width * (maxHeight / height)); height = maxHeight; }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width; canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function previewImageFile(e) {
+      const file = e.target.files[0]; if (!file) return;
+      const loadingText = document.getElementById('imgLoadingText');
+      loadingText.style.display = 'flex';
+      
+      try {
+        uploadedBase64 = await compressAndResizeImage(file, 600, 600, 0.7);
+        const previewImg = document.getElementById('previewImg');
+        previewImg.src = uploadedBase64;
+        previewImg.style.display = 'block';
+        document.getElementById('previewPlaceholder').style.display = 'none';
+      } catch (err) {
+        showToast('ไม่สามารถบีบอัดรูปได้', true);
+      } finally {
+        loadingText.style.display = 'none';
+      }
+    }
+
+    function previewImageURL(url) {
+      uploadedBase64 = null;
+      if (url.trim()) {
+        document.getElementById('previewImg').src = url.trim();
+        document.getElementById('previewImg').style.display = 'block';
+        document.getElementById('previewPlaceholder').style.display = 'none';
+      }
+    }
+
+    function resetProductForm() {
+      document.getElementById('productForm').reset();
+      document.getElementById('productId').value = '';
+      uploadedBase64 = null;
+      document.getElementById('previewImg').style.display = 'none';
+      document.getElementById('previewPlaceholder').style.display = 'block';
+      document.getElementById('formTitle').innerHTML = '<i class="fas fa-plus-circle"></i> เพิ่มสินค้าใหม่';
+      document.getElementById('btnSubmit').innerText = 'บันทึกสินค้า';
+      document.getElementById('btnCancel').style.display = 'none';
+    }
+
+    // --- TAB 2: ORDER MANAGEMENT ---
+    function listenOrders() {
+      db.collection('orders').orderBy('timestamp', 'desc').onSnapshot(s => {
+        const con = document.getElementById('ordersListContainer');
+        con.innerHTML = s.empty ? '<p style="text-align:center; color:#999;">ไม่มีคำสั่งซื้อ</p>' : '';
+        s.forEach(doc => {
+          const o = { id: doc.id, ...doc.data() };
+          let badgeClass = 'badge-pending', statusText = 'รอเตรียมจัดส่ง';
+          if (o.status === 'shipping') { badgeClass = 'badge-shipping'; statusText = 'กำลังจัดส่ง'; }
+          else if (o.status === 'completed') { badgeClass = 'badge-completed'; statusText = 'จัดส่งสำเร็จ'; }
+          else if (o.status === 'cancelled') { badgeClass = 'badge-cancelled'; statusText = 'ยกเลิกแล้ว'; }
+
+          con.innerHTML += `
+            <div class="order-card">
+              <div class="order-header">
+                <div><strong>ออเดอร์ ID: ${o.id}</strong> <br><small style="color:#888;">ผู้สั่ง: ${o.customer?.name} (${o.customer?.phone})</small></div>
+                <span class="badge ${badgeClass}">${statusText}</span>
+              </div>
+              <div style="font-size:0.88rem; color:#555; margin-bottom:10px;"><strong>ที่อยู่:</strong> ${o.customer?.address}</div>
+              <div style="font-size:0.9rem; margin-bottom:10px;"><strong>ยอดรวม:</strong> <span style="color:var(--primary); font-weight:bold;">฿${o.total}</span></div>
+              
+              <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <select class="form-control" style="width:auto;" onchange="updateOrderStatus('${o.id}', this.value)">
+                  <option value="pending" ${o.status==='pending'?'selected':''}>รอเตรียมจัดส่ง</option>
+                  <option value="shipping" ${o.status==='shipping'?'selected':''}>กำลังจัดส่ง</option>
+                  <option value="completed" ${o.status==='completed'?'selected':''}>จัดส่งสำเร็จ</option>
+                  <option value="cancelled" ${o.status==='cancelled'?'selected':''}>ยกเลิกคำสั่งซื้อ</option>
+                </select>
+
+                <input type="text" id="courier_${o.id}" class="form-control" style="width:130px;" placeholder="ขนส่ง" value="${o.courier || ''}">
+                <input type="text" id="track_${o.id}" class="form-control" style="width:170px;" placeholder="เลขพัสดุ Tracking" value="${o.trackingNumber || ''}">
+                <button class="btn btn-sm btn-info" onclick="saveTracking('${o.id}')">บันทึกขนส่ง</button>
+              </div>
+            </div>`;
+        });
+      });
+    }
+
+    async function updateOrderStatus(orderId, status) {
+      await db.collection('orders').doc(orderId).update({ status });
+      showToast('อัปเดตสถานะสั่งซื้อแล้ว');
+    }
+
+    async function saveTracking(orderId) {
+      const courier = document.getElementById(`courier_${orderId}`).value.trim();
+      const trackingNumber = document.getElementById(`track_${orderId}`).value.trim();
+      await db.collection('orders').doc(orderId).update({ courier, trackingNumber, status: 'shipping' });
+      showToast('บันทึกเลขพัสดุเรียบร้อย');
+    }
+
+    // --- TAB 3: CHAT MANAGEMENT ---
+    function listenChats() {
+      db.collection('chats').onSnapshot(s => {
+        const uList = document.getElementById('chatUserList');
+        uList.innerHTML = s.empty ? '<p style="color:#888;">ไม่มีรายการแชท</p>' : '';
+        s.forEach(doc => {
+          const u = doc.data();
+          uList.innerHTML += `
+            <div class="user-item ${selectedChatUserId===doc.id?'active':''}" onclick="selectChatUser('${doc.id}', '${u.displayName||'Customer'}', ${u.isBlocked||false})">
+              <strong>${u.displayName || 'Customer'}</strong> <br>
+              <small style="color:#777;">${u.lastMessage || 'ไม่มีข้อความ'}</small>
+            </div>`;
+        });
+      });
+    }
+
+    function selectChatUser(userId, name, isBlocked) {
+      selectedChatUserId = userId; isSelectedUserBlocked = isBlocked;
+      document.getElementById('activeChatUser').innerText = `สนทนากับ: ${name}`;
+      const blockBtn = document.getElementById('blockBtn');
+      blockBtn.style.display = 'inline-block';
+      blockBtn.innerText = isBlocked ? 'ปลดบล็อก' : 'บล็อกผู้ใช้';
+      blockBtn.className = isBlocked ? 'btn btn-sm btn-success' : 'btn btn-sm btn-delete';
+
+      db.collection('chats').doc(userId).collection('messages').orderBy('timestamp').onSnapshot(s => {
+        const msgContainer = document.getElementById('chatMessages');
+        msgContainer.innerHTML = '';
+        s.forEach(d => {
+          const m = d.data();
+          msgContainer.innerHTML += `<div class="msg-bubble ${m.sender==='admin'?'msg-admin':'msg-user'}">${m.text}</div>`;
+        });
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+      });
+    }
+
+    async function sendAdminMessage() {
+      const txt = document.getElementById('adminMsgInput').value.trim();
+      if (!txt || !selectedChatUserId) return;
+      document.getElementById('adminMsgInput').value = '';
+      await db.collection('chats').doc(selectedChatUserId).collection('messages').add({
+        text: txt, sender: 'admin', timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      await db.collection('chats').doc(selectedChatUserId).set({ lastMessage: txt }, { merge: true });
+    }
+
+    async function toggleBlockUser() {
+      if (!selectedChatUserId) return;
+      isSelectedUserBlocked = !isSelectedUserBlocked;
+      await db.collection('chats').doc(selectedChatUserId).set({ isBlocked: isSelectedUserBlocked }, { merge: true });
+      showToast(isSelectedUserBlocked ? 'บล็อกผู้ใช้แล้ว' : 'ปลดบล็อกผู้ใช้แล้ว');
+      selectChatUser(selectedChatUserId, document.getElementById('activeChatUser').innerText.replace('สนทนากับ: ',''), isSelectedUserBlocked);
+    }
+
+    // --- TAB 4: COUPON MANAGEMENT ---
+    function listenCoupons() {
+      db.collection('coupons').onSnapshot(s => {
+        const tbody = document.getElementById('couponTableBody');
+        tbody.innerHTML = s.empty ? '<tr><td colspan="4" style="text-align:center; color:#999;">ไม่มีคูปอง</td></tr>' : '';
+        s.forEach(doc => {
+          const c = doc.data();
+          tbody.innerHTML += `
+            <tr>
+              <td><strong>${doc.id}</strong></td>
+              <td>${c.type==='fixed'?`฿${c.value}`:`${c.value}%`}</td>
+              <td>${c.quantityUsed || 0} / ${c.quantityAvailable}</td>
+              <td><button class="btn btn-sm btn-delete" onclick="deleteCoupon('${doc.id}')">ลบ</button></td>
+            </tr>`;
+        });
+      });
+    }
+
+    async function handleCouponSubmit(e) {
+      e.preventDefault();
+      const code = document.getElementById('cCode').value.trim().toUpperCase();
+      const type = document.getElementById('cType').value;
+      const value = parseFloat(document.getElementById('cValue').value);
+      const quantityAvailable = parseInt(document.getElementById('cQty').value);
+
+      await db.collection('coupons').doc(code).set({ type, value, quantityAvailable, quantityUsed: 0, limitPerUser: 1 });
+      showToast('สร้างคูปองส่วนลดสำเร็จ');
+      e.target.reset();
+    }
+
+    async function deleteCoupon(code) {
+      if (confirm(`ลบคูปอง ${code} ใช่หรือไม่?`)) {
+        await db.collection('coupons').doc(code).delete();
+        showToast('ลบคูปองเรียบร้อย');
+      }
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.querySelector('span').innerText = msg;
+      toast.className = isError ? 'show error' : 'show';
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+  </script>
+</body>
+</html>

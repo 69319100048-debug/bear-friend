@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>เข้าสู่ระบบ - Bear & Friends</title>
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    body { 
+      margin:0; font-family:'Mitr',sans-serif; background:#f7f4fd; 
+      display:flex; flex-direction:column; height:100vh;
+      user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
+    }
+    
+    .header { background:white; padding:18px 40px; display:flex; justify-content:space-between; box-shadow:0 2px 10px rgba(140, 108, 216, 0.1); align-items:center; z-index: 10; }
+    .brand-logo { color:#8C6CD8; font-size:1.6rem; font-weight:600; display:flex; align-items:center; gap:8px; text-decoration:none; }
+    .brand-logo i { font-size:1.8rem; }
+    
+    .main-content { 
+      background: url('df.png') no-repeat center center / cover; 
+      flex-grow:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; position: relative; overflow: hidden; 
+    }
+
+    .auth-card { 
+      background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      width:100%; max-width:400px; padding:35px 30px; border-radius:18px; 
+      box-shadow:0 10px 25px rgba(140, 108, 216, 0.2); position: relative; z-index: 2; border: 1px solid #eae2fb; 
+    }
+    .auth-title { text-align:center; color:#6b46c1; margin-top:0; margin-bottom:20px; font-size:1.3rem; }
+    .tabs { display:flex; margin-bottom:25px; border-bottom:2px solid #f0eafc; }
+    .tab-item { flex:1; text-align:center; padding:10px; cursor:pointer; color:#888; transition: 0.3s; font-weight:500; }
+    .tab-item.active { color:#8C6CD8; border-bottom:3px solid #8C6CD8; font-weight:600; }
+    
+    input { width:100%; padding:12px 15px; margin-bottom:15px; border:1.5px solid #e2d9f7; box-sizing:border-box; border-radius:10px; font-family: 'Mitr', sans-serif; font-size: 0.95rem; transition: 0.3s; outline:none; background: #ffffff; }
+    input:focus { border-color: #8C6CD8; box-shadow:0 0 0 3px rgba(140, 108, 216, 0.15); }
+    
+    button { width:100%; background:#8C6CD8; color:white; padding:12px; border:none; cursor:pointer; font-size:1.05rem; border-radius:10px; transition:0.3s; font-family: 'Mitr', sans-serif; font-weight: 600; }
+    button:hover { background: #7A56D3; transform: translateY(-1px); box-shadow:0 4px 12px rgba(140, 108, 216, 0.3); }
+    button:disabled { background:#ccc; cursor: not-allowed; box-shadow:none; }
+    
+    .forgot-link { display: block; text-align: right; margin-bottom: 15px; color: #777; font-size: 0.88rem; text-decoration: none; }
+    .forgot-link:hover { color: #8C6CD8; text-decoration: underline; }
+    
+    .error { color:#d93025; font-size:0.9rem; text-align:center; margin-bottom:15px; display:none; background: #ffe6e6; padding: 10px; border-radius: 8px; }
+    .success { color:#188038; font-size:0.9rem; text-align:center; margin-bottom:15px; display:none; background: #e6f4ea; padding: 10px; border-radius: 8px; }
+    .back-btn { background: #f0eafc; color: #555; margin-top: 10px; }
+    .back-btn:hover { background: #e2d7f8; }
+
+    /* Custom Modal */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+    .alert-modal-box { background: white; padding: 25px; border-radius: 15px; text-align: center; width: 90%; max-width: 350px; animation: popIn 0.3s; }
+    @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .alert-icon { font-size: 3rem; margin-bottom: 12px; display: block; color: #4CAF50; }
+    .alert-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 8px; color: #333; }
+    .alert-desc { font-size: 0.95rem; color: #666; margin-bottom: 20px; }
+    .btn-alert-ok { background: #8C6CD8; color: white; width: 100%; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Mitr'; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="#" class="brand-logo">
+       <i class="fas fa-paw"></i> Bear & Friends
+    </a>
+  </div>
+
+  <div class="main-content">
+    <div class="auth-card">
+      <div class="auth-title"><i class="fas fa-heart" style="color:#ff85a2;"></i> ยินดีต้อนรับสู่ร้านตุ๊กตา</div>
+      
+      <div class="tabs" id="tabContainer">
+        <div class="tab-item active" onclick="switchTab('login')">เข้าสู่ระบบ</div>
+        <div class="tab-item" onclick="switchTab('register')">ลงทะเบียน</div>
+      </div>
+
+      <div id="errMsg" class="error"></div>
+      <div id="successMsg" class="success"></div>
+
+      <form id="loginForm" onsubmit="doLogin(event)">
+        <input type="email" id="lEmail" placeholder="อีเมล" required>
+        <input type="password" id="lPass" placeholder="รหัสผ่าน" required>
+        <a href="#" class="forgot-link" onclick="switchTab('reset')">ลืมรหัสผ่าน?</a>
+        <button id="lBtn">เข้าสู่ระบบ</button>
+      </form>
+
+      <form id="regForm" onsubmit="doReg(event)" style="display:none;">
+        <input type="email" id="rEmail" placeholder="อีเมล" required>
+        <input type="password" id="rPass" placeholder="รหัสผ่าน (6 ตัวขึ้นไป)" required minlength="6">
+        <input type="password" id="rPass2" placeholder="ยืนยันรหัสผ่าน" required>
+        <button id="rBtn">ลงทะเบียน</button>
+      </form>
+
+      <form id="resetForm" onsubmit="doReset(event)" style="display:none;">
+        <h3 style="text-align:center; color:#333; margin-top:0;">รีเซ็ตรหัสผ่าน</h3>
+        <p style="font-size:0.9rem; color:#666; text-align:center; margin-bottom:20px;">กรอกอีเมลของคุณ ระบบจะส่งลิงก์สำหรับตั้งรหัสผ่านใหม่ไปให้ทางอีเมล</p>
+        <input type="email" id="resetEmail" placeholder="กรอกอีเมลของคุณ" required>
+        <button id="resetBtn">ส่งลิงก์รีเซ็ต</button>
+        <button type="button" class="back-btn" onclick="switchTab('login')">ยกเลิก</button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Modal ป๊อปอัพแจ้งเตือนแบบสร้างเอง -->
+  <div id="customAlertModal" class="modal">
+    <div class="alert-modal-box">
+      <div id="customAlertIcon" class="alert-icon">✅</div>
+      <div id="customAlertTitle" class="alert-title">แจ้งเตือน</div>
+      <div id="customAlertDesc" class="alert-desc">ข้อความแจ้งเตือน</div>
+      <button class="btn-alert-ok" onclick="closeAlertModal()">ตกลง</button>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDAQ5ciTKsx2Ir9aG2DKkn9QbOgNoRqE-o",
+      authDomain: "bear-eb284.firebaseapp.com",
+      projectId: "bear-eb284",
+      storageBucket: "bear-eb284.firebasestorage.app",
+      messagingSenderId: "1010335585380",
+      appId: "1:1010335585380:web:a22a798c7613f4109b3b71",
+      measurementId: "G-8JXX2EYXS9"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    document.addEventListener('contextmenu', (e) => { e.preventDefault(); });
+    document.addEventListener('copy', (e) => { e.preventDefault(); });
+
+    auth.onAuthStateChanged(u => { if(u) window.location.href='shop.html'; });
+
+    let onAlertCloseCallback = null;
+
+    function customAlert(title, desc, isError = false, callback = null) {
+      document.getElementById('customAlertTitle').innerText = title;
+      document.getElementById('customAlertDesc').innerText = desc;
+      document.getElementById('customAlertIcon').innerHTML = isError ? '❌' : '✅';
+      document.getElementById('customAlertIcon').style.color = isError ? '#d93025' : '#4CAF50';
+      onAlertCloseCallback = callback;
+      document.getElementById('customAlertModal').style.display = 'flex';
+    }
+
+    function closeAlertModal() {
+      document.getElementById('customAlertModal').style.display = 'none';
+      if (onAlertCloseCallback) {
+        onAlertCloseCallback();
+        onAlertCloseCallback = null;
+      }
+    }
+
+    function switchTab(m) {
+      document.getElementById('errMsg').style.display='none';
+      document.getElementById('successMsg').style.display='none';
+      const t=document.getElementById('tabContainer');
+      ['loginForm','regForm','resetForm'].forEach(id=>document.getElementById(id).style.display='none');
+      
+      if(m==='login') {
+        document.getElementById('loginForm').style.display='block'; t.style.display='flex';
+        updateActiveTab(0);
+      } else if(m==='register') {
+        document.getElementById('regForm').style.display='block'; t.style.display='flex';
+        updateActiveTab(1);
+      } else {
+        document.getElementById('resetForm').style.display='block'; t.style.display='none';
+      }
+    }
+
+    function updateActiveTab(idx) {
+      const tabs = document.querySelectorAll('.tab-item');
+      tabs.forEach((t, i) => { if(i===idx) t.classList.add('active'); else t.classList.remove('active'); });
+    }
+
+    async function doLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('lBtn'); btn.disabled=true; btn.innerText="กำลังเข้าสู่ระบบ...";
+      try { 
+        await auth.signInWithEmailAndPassword(document.getElementById('lEmail').value, document.getElementById('lPass').value); 
+      } catch(err) { 
+        showErr("อีเมลหรือรหัสผ่านไม่ถูกต้อง"); 
+        btn.disabled=false; 
+        btn.innerText="เข้าสู่ระบบ"; 
+      }
+    }
+
+    async function doReg(e) {
+      e.preventDefault();
+      const p1 = document.getElementById('rPass').value, p2 = document.getElementById('rPass2').value;
+      if(p1!==p2) return showErr("รหัสผ่านไม่ตรงกัน");
+      const btn = document.getElementById('rBtn'); btn.disabled=true; btn.innerText="กำลังสมัคร...";
+      try { 
+        await auth.createUserWithEmailAndPassword(document.getElementById('rEmail').value, p1); 
+        customAlert("สมัครสมาชิกสำเร็จ!", "ยินดีต้อนรับสู่ Bear & Friends ระบบกำลังนำคุณเข้าสู่ร้านค้า", false, () => {
+          switchTab('login');
+        }); 
+      } catch(err) { 
+        showErr(err.message); 
+        btn.disabled=false; 
+        btn.innerText="สมัครสมาชิก"; 
+      }
+    }
+
+    async function doReset(e) {
+      e.preventDefault();
+      const email = document.getElementById('resetEmail').value;
+      const btn = document.getElementById('resetBtn'); btn.disabled=true; btn.innerText="กำลังส่ง...";
+      try {
+        await auth.sendPasswordResetEmail(email);
+        document.getElementById('successMsg').innerText = "✅ ส่งลิงก์รีเซ็ตไปที่ "+email+" แล้ว";
+        document.getElementById('successMsg').style.display='block';
+        document.getElementById('errMsg').style.display='none';
+        btn.disabled=false; btn.innerText="ส่งอีกครั้ง";
+      } catch(err) { 
+        showErr("ไม่พบอีเมลนี้ในระบบ"); 
+        btn.disabled=false; 
+        btn.innerText="ส่งลิงก์รีเซ็ต"; 
+      }
+    }
+
+    function showErr(t) { 
+      const e=document.getElementById('errMsg'); 
+      e.innerText=t; 
+      e.style.display='block'; 
+      document.getElementById('successMsg').style.display='none'; 
+    }
+  </script>
+</body>
+</html>
