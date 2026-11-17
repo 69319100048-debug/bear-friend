@@ -19,7 +19,8 @@
     html { scroll-behavior: smooth; }
     body { 
       font-family: 'Mitr', sans-serif; background-color: var(--bg); 
-      margin: 0; padding-bottom: 70px; font-size: 16px; 
+      margin: 0; padding-bottom: 80px; font-size: 16px; 
+      overflow-x: hidden;
       user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
     }
     
@@ -47,20 +48,20 @@
     .history-clear:hover { background: #F3F0FF; }
 
     .nav-actions { display: flex; align-items: center; gap: 15px; }
-    .icon-btn { color: #555; font-size: 1.25rem; position: relative; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; gap:2px; transition:0.2s; white-space: nowrap; }
+    .icon-btn { color: #555; position: relative; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; gap: 2px; transition: 0.2s; white-space: nowrap; }
     .icon-btn i { font-size: 1.3rem; color: var(--primary); }
     .icon-btn:hover { color: var(--primary); }
     .cart-badge { position: absolute; top: -6px; right: 2px; background: #ff85a2; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 50%; font-weight: bold; }
     .profile-menu { display: flex; align-items: center; gap: 8px; cursor: pointer; color: #444; }
-    .header-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); background: #eee; }
+    .header-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); background: #eee; flex-shrink: 0; }
     .header-name { font-size: 0.85rem; font-weight: 500; max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* BANNER HERO SECTION (FULL WIDTH) */
+    /* BANNER HERO SECTION */
     .banner-container { 
       position: relative; width: 100%; max-width: 100%; margin: 0 auto 15px auto; 
       border-radius: 0; overflow: hidden; box-shadow: 0 4px 15px rgba(140, 108, 216, 0.15); 
     }
-    .banner-img { width: 100%; display: block; height: 400px; object-fit: cover; transition: opacity 0.3s ease; }
+    .banner-img { width: 100%; display: block; height: 400px; object-fit: cover; object-position: center; transition: opacity 0.3s ease; }
     .banner-arrow { 
       position: absolute; top: 50%; transform: translateY(-50%); 
       width: 44px; height: 44px; background: rgba(255,255,255,0.85); border-radius: 50%; 
@@ -70,21 +71,15 @@
     .banner-arrow:hover { background: white; transform: translateY(-50%) scale(1.1); }
     .banner-arrow.prev { left: 25px; }
     .banner-arrow.next { right: 25px; }
-    
-    @media (max-width: 768px) {
-      .banner-img { height: 200px; }
-      header { padding: 12px 15px; gap: 10px; }
-      .icon-btn span { display: none; }
-    }
 
-    /* Category Bar (FULL WIDTH) */
+    /* Category Bar */
     .category-section-title { padding: 15px 40px 5px 40px; max-width: 100%; margin: 0 auto; font-weight: 600; color: #4a3770; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
-    .category-bar { display: flex; overflow-x: auto; padding: 10px 40px; gap: 12px; max-width: 100%; margin: 0 auto; scrollbar-width: none; box-sizing: border-box; }
+    .category-bar { display: flex; overflow-x: auto; padding: 10px 40px; gap: 12px; max-width: 100%; margin: 0 auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; box-sizing: border-box; }
     .category-bar::-webkit-scrollbar { display: none; }
     .cat-item { white-space: nowrap; padding: 8px 18px; border: 1.5px solid #e8e0f7; border-radius: 25px; cursor: pointer; color: #555; transition: 0.25s; background: white; font-size: 0.92rem; display: flex; align-items: center; gap: 6px; }
     .cat-item.active, .cat-item:hover { border-color: var(--primary); color: var(--primary); background-color: #F3EEFC; font-weight: 600; }
 
-    /* Features Grid (FULL WIDTH) */
+    /* Features Grid */
     .features-bar { 
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; max-width: 100%; 
       margin: 15px 40px; padding: 15px 25px; background: white; border-radius: 15px; 
@@ -92,7 +87,7 @@
     }
     .feature-item { display: flex; align-items: center; gap: 12px; padding: 5px; }
     .feature-icon { width: 42px; height: 42px; background: #F3EEFC; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
-    .feature-text { font-size: 0.85rem; color: #444; line-height: 1.2; }
+    .feature-text { font-size: 0.85rem; color: #444; line-height: 1.25; }
     .feature-text strong { display: block; color: #333; font-size: 0.9rem; }
 
     /* MAIN PAGE COUPON SECTION */
@@ -111,7 +106,7 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 15px;
     }
     .coupon-section-title {
@@ -166,73 +161,27 @@
       font-size: 1.35rem;
       flex-shrink: 0;
     }
-    .ticket-info {
-      min-width: 0;
-    }
-    .ticket-value {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--primary);
-      line-height: 1.2;
-    }
+    .ticket-info { min-width: 0; }
+    .ticket-value { font-size: 1.05rem; font-weight: 600; color: var(--primary); line-height: 1.2; }
     .ticket-code-badge {
-      display: inline-block;
-      background: #fdf8e6;
-      color: #b8860b;
-      border: 1px solid #f2dc9b;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 6px;
-      margin-top: 4px;
+      display: inline-block; background: #fdf8e6; color: #b8860b; border: 1px solid #f2dc9b;
+      font-size: 0.78rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; margin-top: 4px;
     }
-    .ticket-quota {
-      font-size: 0.75rem;
-      color: #888;
-      margin-top: 3px;
-    }
+    .ticket-quota { font-size: 0.75rem; color: #888; margin-top: 3px; }
     .btn-claim-ticket {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-family: 'Mitr', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: 0.2s;
-      flex-shrink: 0;
+      background: var(--primary); color: white; border: none; padding: 8px 14px;
+      border-radius: 10px; font-family: 'Mitr', sans-serif; font-size: 0.85rem;
+      font-weight: 500; cursor: pointer; white-space: nowrap; transition: 0.2s; flex-shrink: 0;
     }
-    .btn-claim-ticket:hover {
-      background: var(--primary-dark);
-    }
-    .btn-claim-ticket.claimed {
-      background: #e8f5e9;
-      color: #2e7d32;
-      border: 1px solid #c8e6c9;
-      cursor: pointer;
-    }
-    .btn-claim-ticket.claimed:hover {
-      background: #dcedc8;
-    }
-    .btn-claim-ticket:disabled {
-      background: #e0e0e0;
-      color: #999;
-      cursor: not-allowed;
-    }
-
-    @media (max-width: 900px) {
-      .features-bar { grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 15px 20px; }
-      .coupon-banner-section { margin: 15px 20px; padding: 16px; }
-      .category-section-title, .category-bar, .section-title { padding-left: 20px; padding-right: 20px; }
-    }
+    .btn-claim-ticket:hover { background: var(--primary-dark); }
+    .btn-claim-ticket.claimed { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; cursor: pointer; }
+    .btn-claim-ticket.claimed:hover { background: #dcedc8; }
+    .btn-claim-ticket:disabled { background: #e0e0e0; color: #999; cursor: not-allowed; }
 
     /* Section Title */
     .section-title { padding: 10px 40px; max-width: 100%; margin: 0 auto; font-size: 1.15rem; font-weight: 600; color: #4a3770; display: flex; align-items: center; gap: 8px; box-sizing: border-box; }
 
-    /* Products Grid (FULL WIDTH RESPONSIVE) */
+    /* Products Grid */
     .product-container { 
       display: grid; 
       grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); 
@@ -241,10 +190,6 @@
       max-width: 100%; 
       margin: 0 auto; 
       box-sizing: border-box;
-    }
-    @media (max-width: 600px) { 
-      .product-container { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px 15px; } 
-      .coupon-banner-section { margin: 12px 15px; }
     }
     
     .product-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; position: relative; border: 1px solid #f0eafc; }
@@ -264,47 +209,19 @@
 
     /* Modal Layouts */
     .modal { 
-      display: none; 
-      position: fixed; 
-      top: 0; 
-      left: 0; 
-      width: 100%; 
-      height: 100%; 
-      background: rgba(0,0,0,0.5); 
-      z-index: 1000; 
-      justify-content: center; 
-      align-items: center; 
-      padding: 20px;
-      box-sizing: border-box;
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; 
+      padding: 20px; box-sizing: border-box;
     }
     .modal-content { 
-      background: white; 
-      width: 100%; 
-      max-width: 750px; 
-      border-radius: 20px; 
-      padding: 30px; 
-      max-height: 90vh; 
-      overflow-y: auto; 
-      animation: popIn 0.3s ease-out; 
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      box-sizing: border-box;
-      position: relative;
+      background: white; width: 100%; max-width: 750px; border-radius: 20px; padding: 30px; 
+      max-height: 90vh; overflow-y: auto; animation: popIn 0.3s ease-out; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2); box-sizing: border-box; position: relative;
     }
-    @keyframes popIn { 
-      from { transform: scale(0.92); opacity: 0; } 
-      to { transform: scale(1); opacity: 1; } 
-    }
-    @keyframes slideUp { 
-      from { transform: translateY(100%); } 
-      to { transform: translateY(0); } 
-    }
+    @keyframes popIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-    @media (max-width: 768px) {
-      .modal { align-items: flex-end; padding: 0; }
-      .modal-content { max-width: 100%; border-radius: 20px 20px 0 0; padding: 20px; animation: slideUp 0.3s; }
-    }
-
-    .confirm-modal-box { background: white; padding: 30px; border-radius: 20px; text-align: center; width: 90%; max-width: 400px; animation: popIn 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .confirm-modal-box { background: white; padding: 30px; border-radius: 20px; text-align: center; width: 90%; max-width: 400px; animation: popIn 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.2); box-sizing: border-box; }
     .confirm-icon { font-size: 3.5rem; margin-bottom: 15px; display: block; }
     .confirm-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; color: #333; }
     .confirm-desc { font-size: 1rem; color: #666; margin-bottom: 25px; }
@@ -314,26 +231,26 @@
     .btn-no { background: #eee; color: #333; }
     .btn-ok { background: #4CAF50; color: white; width: 100%; }
 
-    .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 16px 0; }
-    .cart-item-img { width: 75px; height: 75px; object-fit: cover; border-radius: 10px; margin-right: 18px; background-color: #f0f0f0; flex-shrink: 0; }
-    .cart-item-info { flex-grow: 1; }
-    .cart-item-controls { display: flex; align-items: center; gap: 15px; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 16px 0; gap: 10px; }
+    .cart-item-img { width: 75px; height: 75px; object-fit: cover; border-radius: 10px; margin-right: 8px; background-color: #f0f0f0; flex-shrink: 0; }
+    .cart-item-info { flex-grow: 1; min-width: 0; }
+    .cart-item-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .mini-qty-box { display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; margin-top: 6px; width: fit-content; }
     .mini-qty-btn { width: 30px; height: 30px; border: none; background: #f8f8f8; cursor: pointer; color: #555; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
     .mini-qty-val { width: 35px; text-align: center; font-size: 1rem; font-weight: 600; }
-    .close-btn { position: absolute; top: 20px; right: 25px; font-size: 1.8rem; cursor: pointer; color: #888; transition: 0.2s; }
+    .close-btn { position: absolute; top: 18px; right: 22px; font-size: 1.8rem; cursor: pointer; color: #888; transition: 0.2s; line-height: 1; z-index: 5; }
     .close-btn:hover { color: #333; }
-    .checkout-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; font-size: 1.15rem; margin-top: 15px; border-radius: 12px; font-family: 'Mitr', sans-serif; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .checkout-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; font-size: 1.1rem; margin-top: 15px; border-radius: 12px; font-family: 'Mitr', sans-serif; font-weight: 600; cursor: pointer; transition: 0.2s; }
     .checkout-btn:hover { background: var(--primary-dark); }
     
     .order-card { border: 1px solid #efe8fc; border-radius: 15px; padding: 18px; margin-bottom: 18px; background: #fff; box-shadow: 0 3px 10px rgba(0,0,0,0.02); }
-    .order-header { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 12px; font-size: 0.95rem; color: #555; }
+    .order-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 12px; font-size: 0.92rem; color: #555; }
     .order-status { font-weight: 600; color: var(--primary); }
     .order-items { font-size: 0.95rem; color: #333; }
-    .order-total { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 1.15rem; color: var(--primary); margin-top: 12px; }
+    .order-total { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-weight: 600; font-size: 1.1rem; color: var(--primary); margin-top: 12px; }
     
-    .btn-cancel-order { background: #ff424f; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-family: 'Mitr'; font-size: 0.88rem; }
-    .btn-edit-order { background: #f0ad4e; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-family: 'Mitr'; font-size: 0.88rem; }
+    .btn-cancel-order { background: #ff424f; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-family: 'Mitr'; font-size: 0.85rem; }
+    .btn-edit-order { background: #f0ad4e; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-family: 'Mitr'; font-size: 0.85rem; }
 
     /* Track Bar Steps */
     .tracking-stepper { display: flex; justify-content: space-between; margin: 20px 0; position: relative; }
@@ -343,7 +260,7 @@
     .step-label { font-size: 0.82rem; color: #888; margin-top: 8px; font-weight: 500; text-align: center; }
     .step-item.active .step-icon { background: var(--primary); color: white; }
     .step-item.active .step-label { color: var(--primary); font-weight: 600; }
-    .tracking-card-info { background: #f0f7ff; border: 1px dashed #b3d7ff; border-radius: 10px; padding: 12px 18px; margin: 12px 0; font-size: 0.92rem; color: #004085; display: flex; justify-content: space-between; align-items: center; }
+    .tracking-card-info { background: #f0f7ff; border: 1px dashed #b3d7ff; border-radius: 10px; padding: 12px 16px; margin: 12px 0; font-size: 0.9rem; color: #004085; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
     .copy-track-btn { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Mitr'; font-size: 0.82rem; }
 
     /* Payment 2-Column Grid Layout */
@@ -353,23 +270,20 @@
       gap: 25px;
       margin-top: 15px;
     }
-    @media (max-width: 768px) {
-      .payment-grid-layout { grid-template-columns: 1fr; gap: 15px; }
-    }
 
     /* Live Chat */
-    .chat-btn { position: fixed; bottom: 80px; right: 20px; background: var(--primary); color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(140, 108, 216, 0.4); cursor: grab; z-index: 1000; font-size: 22px; }
-    .chat-window { display: none; position: fixed; bottom: 145px; right: 20px; width: 330px; height: 450px; background: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); border-radius: 18px; flex-direction: column; z-index: 1000; overflow: hidden; font-family: 'Mitr'; }
+    .chat-btn { position: fixed; bottom: 25px; right: 20px; background: var(--primary); color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(140, 108, 216, 0.4); cursor: grab; z-index: 950; font-size: 22px; }
+    .chat-window { display: none; position: fixed; bottom: 90px; right: 20px; width: 330px; height: 450px; background: white; box-shadow: 0 8px 25px rgba(0,0,0,0.18); border-radius: 18px; flex-direction: column; z-index: 960; overflow: hidden; font-family: 'Mitr'; }
     .chat-header { background: var(--primary); color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; cursor: grab; font-weight: 500; }
     .chat-body { flex: 1; padding: 14px; overflow-y: auto; background: #f9f7fd; display: flex; flex-direction: column; gap: 10px; }
     .chat-input-area { padding: 12px; border-top: 1px solid #eee; display: flex; background: white; }
     .chat-input-area input { flex: 1; padding: 10px 14px; border: 1px solid #ddd; border-radius: 20px; outline: none; font-family: 'Mitr'; font-size: 0.9rem; }
     .chat-input-area button { background: var(--primary); color: white; border: none; padding: 8px 16px; margin-left: 6px; border-radius: 20px; cursor: pointer; font-family: 'Mitr'; }
-    .msg { padding: 9px 15px; border-radius: 16px; max-width: 80%; font-size: 0.92rem; }
+    .msg { padding: 9px 15px; border-radius: 16px; max-width: 80%; font-size: 0.92rem; word-break: break-word; }
     .msg-user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
     .msg-admin { background: #e9e2f7; color: #333; align-self: flex-start; border-bottom-left-radius: 2px; }
     
-    #toast { visibility: hidden; min-width: 220px; background-color: rgba(0, 0, 0, 0.85); color: #fff; text-align: center; border-radius: 50px; padding: 14px 24px; position: fixed; z-index: 2000; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 1rem; opacity: 0; transition: opacity 0.3s, visibility 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    #toast { visibility: hidden; min-width: 220px; max-width: 85vw; background-color: rgba(0, 0, 0, 0.85); color: #fff; text-align: center; border-radius: 50px; padding: 14px 24px; position: fixed; z-index: 2000; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 0.95rem; opacity: 0; transition: opacity 0.3s, visibility 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
     #toast.show { visibility: visible; opacity: 1; }
     #toast.error { background-color: rgba(220, 53, 69, 0.95); }
     
@@ -383,26 +297,117 @@
     /* Bank / QR Payment Details Style */
     #bankDetails { display: none; background: #f9f7fd; padding: 18px; border-radius: 15px; border: 1px solid #efe8fc; margin-top: 10px; text-align: center; }
     #qrCodeContainer { text-align: center; margin-top: 5px; }
-    #qrCodeContainer img { width: 210px; height: 210px; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+    #qrCodeContainer img { width: 200px; height: 200px; max-width: 100%; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
     
     .qty-selector { display: flex; align-items: center; justify-content: center; margin: 15px 0; }
-    .qty-btn { width: 40px; height: 40px; border: 1px solid #ddd; background: white; font-size: 1.2rem; cursor: pointer; color: #555; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .qty-btn { width: 42px; height: 42px; border: 1px solid #ddd; background: white; font-size: 1.2rem; cursor: pointer; color: #555; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
     .qty-display { width: 60px; text-align: center; font-size: 1.15rem; font-weight: 600; border: none; font-family: 'Mitr'; }
-    .modal-product-img { width: 100px; height: 100px; object-fit: cover; border-radius: 12px; margin-right: 18px; }
+    .modal-product-img { width: 95px; height: 95px; object-fit: cover; border-radius: 12px; margin-right: 16px; flex-shrink: 0; }
     .modal-product-info { display: flex; align-items: center; margin-bottom: 18px; border-bottom: 1px solid #eee; padding-bottom: 18px; }
     .fav-item-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
     .empty-fav { grid-column: span 2; text-align: center; color: #999; padding: 30px; }
     .profile-header-edit { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
-    .profile-img-large { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light); margin-bottom: 12px; }
+    .profile-img-large { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light); margin-bottom: 12px; }
     .upload-label { cursor: pointer; color: var(--primary); font-size: 0.9rem; display: flex; align-items: center; gap: 6px; background: #F3EEFC; padding: 8px 18px; border-radius: 20px; transition: 0.2s; }
     .logout-btn { width: 100%; background: #eee; color: #333; margin-top: 12px; font-family: 'Mitr'; font-weight:600; }
     
-    .size-selector { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; border-bottom: 1px solid #eee; padding-bottom: 18px; }
-    .size-btn { padding: 8px 16px; border: 1.5px solid #ddd; border-radius: 8px; cursor: pointer; background: white; font-family: 'Mitr'; font-size: 0.92rem; }
+    .size-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid #eee; padding-bottom: 18px; }
+    .size-btn { padding: 8px 14px; border: 1.5px solid #ddd; border-radius: 8px; cursor: pointer; background: white; font-family: 'Mitr'; font-size: 0.9rem; }
     .size-btn.active { border-color: var(--primary); background: #F3EEFC; color: var(--primary); font-weight: 600; }
     .size-btn:disabled { background: #f9f9f9; color: #ccc; cursor: not-allowed; text-decoration: line-through; }
 
-    .coupon-btn-item { background: #fdf8e6; border: 1px dashed #e6c06a; color: #b8860b; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-family: 'Mitr', sans-serif; font-size: 0.9rem; font-weight: 500; }
+    .coupon-btn-item { background: #fdf8e6; border: 1px dashed #e6c06a; color: #b8860b; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-family: 'Mitr', sans-serif; font-size: 0.88rem; font-weight: 500; }
+
+    /* =========================================
+       MOBILE & TABLET RESPONSIVE STYLES
+       ========================================= */
+    @media (max-width: 900px) {
+      .features-bar { grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 15px 20px; padding: 14px 16px; }
+      .coupon-banner-section { margin: 15px 20px; padding: 16px; }
+      .category-section-title, .category-bar, .section-title { padding-left: 20px; padding-right: 20px; }
+      .product-container { padding: 10px 20px 30px 20px; }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .brand-logo { font-size: 1.15rem; }
+      .nav-actions { margin-left: auto; gap: 12px; }
+      .icon-btn span { display: none; }
+      .icon-btn i { font-size: 1.25rem; }
+      .header-name { display: none; }
+      .header-avatar { width: 30px; height: 30px; }
+      .search-bar {
+        order: 3;
+        flex-basis: 100%;
+        width: 100%;
+        padding: 7px 14px;
+      }
+
+      input, textarea, select, .form-control, .search-bar input, .chat-input-area input {
+        font-size: 16px !important;
+      }
+
+      .banner-img { height: 210px; }
+      .banner-arrow { width: 34px; height: 34px; font-size: 0.95rem; }
+      .banner-arrow.prev { left: 10px; }
+      .banner-arrow.next { right: 10px; }
+
+      .modal { align-items: flex-end; padding: 0; }
+      .modal-content {
+        max-width: 100%;
+        border-radius: 22px 22px 0 0;
+        padding: 22px 18px calc(22px + env(safe-area-inset-bottom)) 18px;
+        max-height: 88vh;
+        animation: slideUp 0.3s;
+      }
+      .modal-content h2 { font-size: 1.25rem; padding-right: 30px; }
+      .payment-grid-layout { grid-template-columns: 1fr; gap: 15px; }
+    }
+
+    @media (max-width: 600px) {
+      .banner-img { height: 175px; }
+      .category-section-title { padding: 12px 15px 4px 15px; font-size: 1rem; }
+      .category-bar { padding: 8px 15px; gap: 8px; }
+      .cat-item { padding: 6px 14px; font-size: 0.85rem; }
+
+      .features-bar { margin: 12px 15px; padding: 12px; gap: 10px; }
+      .feature-icon { width: 34px; height: 34px; font-size: 1rem; }
+      .feature-text { font-size: 0.78rem; }
+      .feature-text strong { font-size: 0.84rem; }
+
+      .coupon-banner-section { margin: 12px 15px; padding: 14px; border-radius: 14px; }
+      .coupon-section-title { font-size: 1.05rem; }
+      .main-coupon-grid { grid-template-columns: 1fr; gap: 10px; }
+      .ticket-card { padding: 12px; }
+      .ticket-icon-box { width: 42px; height: 42px; font-size: 1.15rem; }
+
+      .section-title { padding: 8px 15px; font-size: 1.05rem; }
+      .product-container { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 8px 15px 25px 15px; }
+      .p-details { padding: 10px; }
+      .p-name { font-size: 0.88rem; }
+      .p-price { font-size: 1.05rem; }
+      .p-btn { padding: 8px; font-size: 0.85rem; margin-top: 8px; }
+
+      .cart-item { padding: 12px 0; }
+      .cart-item-img { width: 60px; height: 60px; margin-right: 4px; }
+      .fav-item-grid { gap: 10px; }
+      .step-label { font-size: 0.75rem; }
+
+      .chat-btn { width: 48px; height: 48px; bottom: 20px; right: 15px; font-size: 20px; }
+      .chat-window {
+        width: calc(100vw - 24px) !important;
+        left: 12px !important;
+        right: 12px !important;
+        bottom: 80px !important;
+        top: auto !important;
+        height: 62vh;
+        max-height: 440px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -505,7 +510,7 @@
     </div>
   </div>
 
-  <!-- MAIN PAGE COUPON CLAIM SECTION (ย้ายมาจากหน้าโปรไฟล์) -->
+  <!-- MAIN PAGE COUPON CLAIM SECTION -->
   <div class="coupon-banner-section" id="couponSection">
     <div class="coupon-section-header">
       <div class="coupon-section-title">
@@ -527,7 +532,7 @@
   <div id="toast"><i class="fas fa-check-circle"></i> <span>ข้อความแจ้งเตือน</span></div>
   <div class="product-container" id="productList"><p style="width:100%; text-align:center;">กำลังโหลดสินค้าตุ๊กตา...</p></div>
 
-  <!-- Profile Modal (นำปุ่มรับโค้ดส่วนลดออกแล้ว) -->
+  <!-- Profile Modal -->
   <div id="profileModal" class="modal">
     <div class="modal-content" style="max-width: 600px;">
       <span class="close-btn" onclick="closeModal('profileModal')">&times;</span>
@@ -554,13 +559,13 @@
   <div id="qtyModal" class="modal">
     <div class="modal-content" style="max-width: 500px;">
       <span class="close-btn" onclick="closeModal('qtyModal')">&times;</span>
-      <h3 style="margin-top:0; color:#4a3770; font-size:1.3rem;">เลือกขนาดและจำนวน</h3>
+      <h3 style="margin-top:0; color:#4a3770; font-size:1.25rem;">เลือกขนาดและจำนวน</h3>
       <div class="modal-product-info">
         <img id="qtyImg" class="modal-product-img" src="">
         <div>
-          <div id="qtyName" style="font-weight:bold; font-size:1.1rem; margin-bottom:5px;"></div>
-          <div id="qtyPrice" style="color:var(--primary); font-size:1.2rem; font-weight:bold;"></div>
-          <div id="qtyTotalStock" style="font-size:0.88rem; color:#888; margin-top:4px;"></div>
+          <div id="qtyName" style="font-weight:bold; font-size:1.05rem; margin-bottom:5px;"></div>
+          <div id="qtyPrice" style="color:var(--primary); font-size:1.15rem; font-weight:bold;"></div>
+          <div id="qtyTotalStock" style="font-size:0.85rem; color:#888; margin-top:4px;"></div>
         </div>
       </div>
       
@@ -583,18 +588,18 @@
     <div class="modal-content" style="max-width: 780px;">
       <span class="close-btn" onclick="closeModal('cartModal')">&times;</span>
       <h2 style="margin-top:0;"><i class="fas fa-basket-shopping" style="color:var(--primary);"></i> ตะกร้าสินค้า</h2>
-      <div id="cartItemsContainer" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"><p>ยังไม่มีสินค้าในตะกร้า</p></div>
+      <div id="cartItemsContainer" style="max-height: 320px; overflow-y: auto; padding-right: 4px;"><p>ยังไม่มีสินค้าในตะกร้า</p></div>
 
-      <div id="availableCouponsContainer" style="margin-top: 20px; display: none; flex-direction: column; gap: 8px; border-bottom: 1px dashed #ddd; padding-bottom: 15px;">
-        <label style="font-weight: 600; color: #555; font-size: 0.95rem;">🎁 โค้ดส่วนลดที่เก็บไว้:</label>
+      <div id="availableCouponsContainer" style="margin-top: 15px; display: none; flex-direction: column; gap: 8px; border-bottom: 1px dashed #ddd; padding-bottom: 12px;">
+        <label style="font-weight: 600; color: #555; font-size: 0.92rem;">🎁 โค้ดส่วนลดที่เก็บไว้:</label>
         <div id="couponButtonList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
       </div>
       
-      <div class="coupon-box" style="margin-top: 15px; display:flex; gap:12px;">
+      <div class="coupon-box" style="margin-top: 14px; display:flex; gap:10px;">
         <input type="text" id="couponInput" class="form-control" placeholder="กรอกโค้ดส่วนลด" style="margin:0; font-family:'Mitr';">
-        <button id="couponBtn" onclick="applyCoupon()" style="width:auto; padding: 0 25px; font-size: 0.95rem; margin:0; font-family:'Mitr'; background:var(--primary); color:white; border:none; border-radius:10px; cursor:pointer;">ใช้โค้ด</button>
+        <button id="couponBtn" onclick="applyCoupon()" style="width:auto; padding: 0 20px; font-size: 0.95rem; margin:0; font-family:'Mitr'; background:var(--primary); color:white; border:none; border-radius:10px; cursor:pointer; white-space:nowrap;">ใช้โค้ด</button>
       </div>
-      <div style="margin-top: 20px; border-top: 2px dashed #ddd; padding-top:15px; font-size:1.05rem; display:flex; flex-direction:column; gap: 8px;">
+      <div style="margin-top: 16px; border-top: 2px dashed #ddd; padding-top:14px; font-size:1rem; display:flex; flex-direction:column; gap: 8px;">
         <div style="display:flex; justify-content:space-between;">
           <span>รวมการสั่งซื้อ</span>
           <span id="subTotalPrice">฿0</span>
@@ -603,7 +608,7 @@
           <span>ส่วนลด (<span id="couponCodeDisplay"></span>)</span>
           <span id="discountAmount"></span>
         </div>
-        <div style="display:flex; justify-content:space-between; font-size:1.3rem; font-weight:600; margin-top:5px;">
+        <div style="display:flex; justify-content:space-between; font-size:1.25rem; font-weight:600; margin-top:4px;">
           <span>ยอดชำระเงินทั้งหมด</span>
           <span id="totalPrice" style="color:var(--primary)">฿0</span>
         </div>
@@ -620,26 +625,26 @@
       
       <div class="payment-grid-layout">
         <!-- ฝั่งซ้าย: ที่อยู่จัดส่ง -->
-        <div style="background: #fdfbfd; padding: 18px; border-radius: 15px; border: 1px solid #efe8fc;">
-          <h3 style="font-size:1.1rem; color:var(--primary); margin-top:0;"><i class="fas fa-map-marker-alt"></i> 1. ที่อยู่จัดส่ง</h3>
+        <div style="background: #fdfbfd; padding: 16px; border-radius: 15px; border: 1px solid #efe8fc;">
+          <h3 style="font-size:1.05rem; color:var(--primary); margin-top:0;"><i class="fas fa-map-marker-alt"></i> 1. ที่อยู่จัดส่ง</h3>
           <div class="form-group"><label>ชื่อ-นามสกุล ผู้รับ *</label><input type="text" id="custName" class="form-control" placeholder="ชื่อ-นามสกุล ผู้รับ"></div>
           <div class="form-group"><label>เบอร์โทรศัพท์ *</label><input type="tel" id="custPhone" class="form-control" placeholder="เบอร์โทรศัพท์"></div>
-          <div class="form-group"><label>ที่อยู่จัดส่ง *</label><textarea id="custAddress" class="form-control" rows="4" placeholder="บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์"></textarea></div>
+          <div class="form-group" style="margin-bottom:0;"><label>ที่อยู่จัดส่ง *</label><textarea id="custAddress" class="form-control" rows="3" placeholder="บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์"></textarea></div>
         </div>
         
         <!-- ฝั่งขวา: วิธีชำระเงิน -->
-        <div style="background: #fdfbfd; padding: 18px; border-radius: 15px; border: 1px solid #efe8fc; display:flex; flex-direction:column; justify-content:space-between;">
+        <div style="background: #fdfbfd; padding: 16px; border-radius: 15px; border: 1px solid #efe8fc; display:flex; flex-direction:column; justify-content:space-between;">
           <div>
-            <h3 style="font-size:1.1rem; color:var(--primary); margin-top:0;"><i class="fas fa-credit-card"></i> 2. วิธีชำระเงิน</h3>
+            <h3 style="font-size:1.05rem; color:var(--primary); margin-top:0;"><i class="fas fa-credit-card"></i> 2. วิธีชำระเงิน</h3>
             <div class="payment-options">
               <label onclick="toggleBank(false)"><input type="radio" name="payment" value="cod" checked> <span><i class="fas fa-truck"></i> เก็บเงินปลายทาง (COD)</span></label>
               <label onclick="toggleBank(true)"><input type="radio" name="payment" value="bank"> <span><i class="fas fa-qrcode"></i> โอนเงินผ่าน สแกน QR Code</span></label>
               
               <div id="bankDetails">
                  <div id="qrCodeContainer">
-                   <p style="font-size:0.9rem; margin-bottom:8px; font-weight:500; color:#4a3770;">สแกน QR Code เพื่อชำระเงิน (พร้อมเพย์)</p>
+                   <p style="font-size:0.88rem; margin-bottom:8px; font-weight:500; color:#4a3770;">สแกน QR Code เพื่อชำระเงิน (พร้อมเพย์)</p>
                    <img id="qrImage" src="" alt="QR Code">
-                   <div style="color:#d93025; font-size:0.85rem; margin-top:8px;">*โปรดชำระเงินให้เสร็จสมบูรณ์ก่อนยืนยันสั่งซื้อ</div>
+                   <div style="color:#d93025; font-size:0.82rem; margin-top:8px;">*โปรดชำระเงินให้เสร็จสมบูรณ์ก่อนยืนยันสั่งซื้อ</div>
                  </div>
               </div>
             </div>
@@ -655,7 +660,7 @@
     <div class="modal-content" style="max-width: 800px;">
       <span class="close-btn" onclick="closeModal('historyModal')">&times;</span>
       <h2 style="margin-top:0;">🚚 ติดตามสถานะและประวัติสั่งซื้อ</h2>
-      <div id="historyContainer" style="margin-top:20px;"><p style="text-align:center;">กำลังโหลด...</p></div>
+      <div id="historyContainer" style="margin-top:16px;"><p style="text-align:center;">กำลังโหลด...</p></div>
     </div>
   </div>
 
@@ -664,7 +669,7 @@
     <div class="modal-content" style="max-width: 750px;">
       <span class="close-btn" onclick="closeModal('favModal')">&times;</span>
       <h2 style="margin-top:0;">❤️ รายการที่ชอบ</h2>
-      <div id="favContainer" class="fav-item-grid" style="margin-top:20px;"></div>
+      <div id="favContainer" class="fav-item-grid" style="margin-top:16px;"></div>
     </div>
   </div>
 
@@ -718,7 +723,7 @@
   <!-- Live Chat Widget -->
   <div class="chat-btn" id="chatBtn"><i class="fas fa-comments"></i></div>
   <div class="chat-window" id="chatWindow">
-    <div class="chat-header"><span>💬 สอบถามร้านค้า Bear & Friends</span><span style="cursor:pointer" onclick="toggleChat()">&times;</span></div>
+    <div class="chat-header"><span>💬 สอบถามร้านค้า Bear & Friends</span><span style="cursor:pointer; font-size:1.3rem;" onclick="toggleChat()">&times;</span></div>
     <div class="chat-body" id="chatBody"><div class="msg msg-admin">สวัสดีครับ! สนใจตุ๊กตาตัวไหน สอบถามแอดมินได้เลยนะครับ 🐻</div></div>
     <div class="chat-input-area">
       <input type="text" id="msgInput" placeholder="พิมพ์ข้อความ..." onkeypress="handleEnter(event)">
@@ -755,7 +760,7 @@
     const DEFAULT_SVG_PRODUCT = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='100%25' height='100%25' fill='%23f4f0fb'/%3E%3Ctext x='50%25' y='45%25' font-family='Mitr, sans-serif' font-size='60' text-anchor='middle' dominant-baseline='middle'%3E🧸%3C/text%3E%3Ctext x='50%25' y='65%25' font-family='Mitr, sans-serif' font-size='20' font-weight='bold' fill='%238C6CD8' text-anchor='middle' dominant-baseline='middle'%3EBear %26 Friends%3C/text%3E%3C/svg%3E";
     const FALLBACK_BANNER_URL = "https://images.unsplash.com/photo-1559454403-b8fb88521f11?w=1200&h=400&fit=crop";
 
-    const bannerImages = ['banner_3.png', 'banner.png'];
+    const bannerImages = ['banner_3.png', 'banner_2.png'];
     let currentBannerIdx = 0;
 
     function updateBanner() {
@@ -817,7 +822,7 @@
     function scrollToCoupons() {
       const sec = document.getElementById('couponSection');
       if (sec) {
-        const yOffset = -80;
+        const yOffset = -110;
         const y = sec.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: y, behavior: 'smooth' });
       }
@@ -894,6 +899,7 @@
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0, dragged = false; 
         handle.onmousedown = dragStart; handle.ontouchstart = dragStart;
         function dragStart(e) {
+          if (window.innerWidth <= 600 && element.id === 'chatWindow') return;
           e = e || window.event; dragged = false; 
           if (e.type === 'touchstart') { pos3 = e.touches[0].clientX; pos4 = e.touches[0].clientY; } 
           else { e.preventDefault(); pos3 = e.clientX; pos4 = e.clientY; }
@@ -1231,7 +1237,7 @@
                 <div class="p-name">${x.name}</div>
                 <div class="p-stock">${stockText} | ${soldText}</div>
               </div>
-              <div style="margin-top:10px;">
+              <div style="margin-top:8px;">
                 <div class="p-price">฿${x.price}</div>
                 <button class="p-btn" onclick="openQtyModal('${x.id}')" ${isOut?'disabled':''}>${isOut?'หมด':'เลือกใส่ตะกร้า'}</button>
               </div>
@@ -1474,7 +1480,8 @@
           <div class="cart-item">
             <img src="${x.image}" class="cart-item-img" onerror="this.onerror=null; this.src='${DEFAULT_SVG_PRODUCT}';"> 
             <div class="cart-item-info">
-              <b>${x.name}</b><br><span style="font-size: 0.88rem; color: #666;">ขนาด: ${x.size}</span><br>
+              <div style="font-weight:600; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${x.name}</div>
+              <span style="font-size: 0.85rem; color: #666;">ขนาด: ${x.size}</span><br>
               <span style="color:var(--primary); font-weight:600;">฿${x.price}</span>
               <div class="mini-qty-box">
                 <button class="mini-qty-btn" onclick="adjustCartQty(${i}, -1)">-</button>
@@ -1483,8 +1490,8 @@
               </div>
             </div>
             <div class="cart-item-controls">
-               <b style="margin-right:10px; font-size:1.1rem;">฿${x.price*x.qty}</b>
-               <button onclick="cart.splice(${i},1);openCart();updateCart()" style="border:none;background:none;color:#999;cursor:pointer;font-size:1.1rem;"><i class="fas fa-trash-can"></i></button>
+               <b style="font-size:1rem;">฿${x.price*x.qty}</b>
+               <button onclick="cart.splice(${i},1);openCart();updateCart()" style="border:none;background:none;color:#999;cursor:pointer;font-size:1.1rem;padding:4px;"><i class="fas fa-trash-can"></i></button>
             </div>
           </div>`; 
       });
@@ -1589,7 +1596,7 @@
       
       ords.forEach(o => {
         let items = ''; 
-        o.items.forEach(i => { items += `<div class="item-row" style="display:flex; justify-content:space-between; font-size:0.95rem; margin-bottom:6px;"><span>${i.name} (ขนาด ${i.size}) x${i.qty}</span><span>฿${i.price*i.qty}</span></div>`; });
+        o.items.forEach(i => { items += `<div class="item-row" style="display:flex; justify-content:space-between; gap:10px; font-size:0.92rem; margin-bottom:6px;"><span>${i.name} (ขนาด ${i.size}) x${i.qty}</span><span style="white-space:nowrap;">฿${i.price*i.qty}</span></div>`; });
         
         let statusText = 'รอเตรียมจัดส่ง';
         let statusColor = 'var(--primary)';
